@@ -1,0 +1,46 @@
+{%extends "layout.html" %}
+
+{% block title %}
+    - Index
+{% endblock %}
+
+{% block links%}
+    <li class="nav-item"> <a class="nav-link" href="#" > Simon </a> </li>
+    <li class="nav-item"> <a class="nav-link" href="#" > Funciona </a> </li>
+{% endblock %}
+
+{% block contenido%}
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+
+      <!-- Login Form -->
+      <form action="/register" method="POST">
+        <input type="text" id="nombres" class="fadeIn second" name="nombres" placeholder="Nombres" required>
+        <input type="text" id="apellidos" class="fadeIn second" name="apellidos" placeholder="Apellidos" required>
+        <input type="text" id="email" class="fadeIn second" name="email" placeholder="Correo Electrónico" required>
+        <input type="password" id="pass" class="fadeIn third" name="pass" placeholder="Contraseña" required>
+        <input type="tel" id="telefono" class="fadeIn second" name="telefono" placeholder="Telefono" required>
+        <input type="tel" id="carnet" class="fadeIn second" name="carnet" placeholder="Numero de carnet" required>
+
+        <div class="fadeIn third">
+        <select class="form-select" aria-label="Default select" id="carrera" name="carrera" required>
+          <option selected="">Seleccione una carrera</option>
+          <option value="Arquitectura">Arquitectura</option>
+          <option value="Ing. Computación">Ing. Computación</option>
+          <option value="Ing. Eléctrica">Ing. Eléctrica</option>
+          <option value="Ing. Eléctrónica">Ing. Eléctrónica</option>
+          <option value="Ing. Química">Ing. Química</option>
+        </select>
+      </div>
+        <!--<input type="password" id="password" class="fadeIn third" name="login" placeholder="Contraseña"> -->
+        <input type="submit" id="condicion" class="fadeIn fourth" value="Crear Cuenta">
+        <a href="/iniciar" id="condicion" class="myButton fadeIn fourth">Iniciar Sesion</a>
+
+      </form>
+
+      <!-- Remind Passowrd -->
+
+    </div>
+  </div>
+{% endblock %}
