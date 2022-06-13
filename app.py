@@ -24,6 +24,7 @@ db = SQL("sqlite:///database/biblo.db")
 
 #Registroppp
 @app.route("/")
+@app.route("/index")
 @app.route('/register', methods=["GET","POST"])
 
 def registro():
@@ -55,10 +56,11 @@ def registro():
         return redirect(url_for('inicio'))
 
 
-    print("a")
     return render_template("index.html")
 
 
-@app.route('/isesion', methods=["GET", "POST"])
+
+@app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
+
     return render_template('isesion.html')
