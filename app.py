@@ -62,5 +62,37 @@ def registro():
 
 @app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
+    session.clear()
+    if request.method == "POST":
+
+        if not request.form.get("carnet"):
+            return apology("Ingrese su carné", 403)
+
+        if not request.form.get("password"):
+            return apology("Ingrese su contraseña", 403)
+
+
+        strcarnet = request.form.get("carnet")
+        try:
+            intcarnet = int(strcarnet)
+        except ValueError:
+            return apology("Ingrese solo numeros")
+
+        #pasw = generate_password_hash(request.form.get("password"))
+        usuario = db.execute("SELECT * FROM usuarios WHERE carnet = ?", intcarnet)
+
+        if len(usuario) != 1 or not check_password_hash(usuario[0]["hash"], request.form.get("password")):
+            return apology("invalid username and/or password", 403)
+
+        session["carnet"] = usuario[0]["carnet"]
+
+        return redirect(url_for('usuariohome'))
 
     return render_template('isesion.html')
+
+
+
+@app.route('/homepage', methods=["GET", "POST"])
+def usuariohome():
+
+    return render_template("ulogin.html")
