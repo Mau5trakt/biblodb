@@ -28,16 +28,37 @@ db = SQL("sqlite:///database/biblo.db")
 
 def registro():
     session.clear() #Sinceramente no recuerdo
+
     if request.method == "POST":
+        carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
         a = db.execute('SELECT * FROM Libros')
         print(a)
         nombres = request.form.get("nombres")
         apellidos = request.form.get("apellidos")
         carrera = request.form.get("carrera")
-        print(nombres)
-        print(apellidos)
-        print(carrera)
+        numero = request.form.get("telefono") # Verificar lo del numero de telefono con el regex
+        strcarnet = request.form.get("carnet")
+        correo = request.form.get("email")
+        hash = generate_password_hash(request.form.get("pass"))
+
+        if carrera not in carreras:
+            return apology("Esa no es una carrera", 400)
+        try:
+            carnet = int(strcarnet)
+            celular = int(numero)
+        except ValueError:
+            return apology("Ingrese solo numeros")
+
+        #Ingresando datos a la database
+        db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
+
+        return redirect(url_for('inicio'))
 
 
     print("a")
-    return render_template("prueba-nav.html")
+    return render_template("index.html")
+
+
+@app.route('/isesion', methods=["GET", "POST"])
+def inicio():
+    return render_template('isesion.html')
