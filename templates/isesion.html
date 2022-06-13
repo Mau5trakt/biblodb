@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Iniciar Sesion
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+
+          <!-- Login Form -->
+          <form>
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="Correo Electrónico">
+            <input type="password" id="password" class="fadeIn third" name="login" placeholder="Contraseña">
+            <input type="submit" id="condicion" class="fadeIn fourth" value="Iniciar Sesion">
+            <a href="index.html" id="condicion" class="myButton fadeIn fourth" onclick=visualizar()>Crear cuenta</a>
+
+          </form>
+
+          <!-- Remind Passowrd -->
+          <div id="formFooter">
+            <a class="underlineHover" href="#">Forgot Password?</a>
+          </div>
+
+        </div>
+      </div>
+
+{% endblock %}
