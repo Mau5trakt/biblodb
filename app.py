@@ -62,5 +62,14 @@ def registro():
 
 @app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
+    if request.method == "POST":
+        print("hay algo")
 
     return render_template('isesion.html')
+
+
+
+@app.route('/homepage', methods=["GET", "POST"])
+def usuariohome():
+
+    return render_template("ulogin.html")
