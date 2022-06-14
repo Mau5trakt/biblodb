@@ -54,14 +54,20 @@ def registro():
             caracteres = "+- "
             for a in range(len(caracteres)):
                 numero = numero.replace(caracteres[a], "")
+        else:
+            return apology("Ingrese un numero de celular valido", 400)
 
-            celular = int(numero)
+        celular = int(numero)
 
         if re.fullmatch(pat_carnet, strcarnet):
             strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
             carnet = int(strcarnet)
             print("********")
             print(carnet)
+        else:
+            return apology("Ingrese un numero de carnet válido", 400)
+
+
 
 
         app.logger.info(carnet)
