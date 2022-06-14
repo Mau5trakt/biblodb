@@ -35,13 +35,14 @@ def registro():
         #patrones regex para el numero de telefono
         pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
         pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
+
         carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
-        a = db.execute('SELECT * FROM Libros')
-        print(a)
+
+
         nombres = request.form.get("nombres")
         apellidos = request.form.get("apellidos")
         carrera = request.form.get("carrera")
-        numero = request.form.get("telefono") # Verificar lo del numero de telefono con el regex
+        numero = request.form.get("telefono")
         strcarnet = request.form.get("carnet")
         correo = request.form.get("email")
         hash = generate_password_hash(request.form.get("pass"))
@@ -52,22 +53,14 @@ def registro():
         if re.fullmatch(pat_celular, numero):
             caracteres = "+- "
             for a in range(len(caracteres)):
-               # print(f"todavia no se ha convertido {numero}")
                 numero = numero.replace(caracteres[a], "")
-                #print(f"ojala: {numero}")
 
             celular = int(numero)
-            print(f"numero: {celular}, type: {type(celular)}")
 
         if re.fullmatch(pat_carnet, strcarnet):
             strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
-            print("****")
-            print(strcarnet)
             carnet = int(strcarnet)
 
-
-        #else:
-         #   return apology("Ingrese un número valido")
 
         #Ingresando datos a la database
         db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
