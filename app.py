@@ -1,3 +1,4 @@
+import re
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_session import Session
@@ -31,6 +32,9 @@ def registro():
     session.clear() #Sinceramente no recuerdo
 
     if request.method == "POST":
+        #patrones regex para el numero de telefono
+        pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
+        pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
         carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
         a = db.execute('SELECT * FROM Libros')
         print(a)
@@ -44,11 +48,26 @@ def registro():
 
         if carrera not in carreras:
             return apology("Esa no es una carrera", 400)
-        try:
-            carnet = int(strcarnet)
+
+        if re.fullmatch(pat_celular, numero):
+            caracteres = "+- "
+            for a in range(len(caracteres)):
+               # print(f"todavia no se ha convertido {numero}")
+                numero = numero.replace(caracteres[a], "")
+                #print(f"ojala: {numero}")
+
             celular = int(numero)
-        except ValueError:
-            return apology("Ingrese solo numeros")
+            print(f"numero: {celular}, type: {type(celular)}")
+
+        if re.fullmatch(pat_carnet, strcarnet):
+            strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
+            print("****")
+            print(strcarnet)
+            carnet = int(strcarnet)
+
+
+        #else:
+         #   return apology("Ingrese un número valido")
 
         #Ingresando datos a la database
         db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
