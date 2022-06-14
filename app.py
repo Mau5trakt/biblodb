@@ -111,6 +111,8 @@ def inicio():
             carnet = int(strcarnet)
             print("********")
             print(carnet)
+        else:
+            return apology("Ingrese un numero de carnet válido", 403)
 
 
         #pasw = generate_password_hash(request.form.get("password"))
