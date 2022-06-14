@@ -60,10 +60,23 @@ def registro():
         if re.fullmatch(pat_carnet, strcarnet):
             strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
             carnet = int(strcarnet)
+            print("********")
+            print(carnet)
 
 
+        app.logger.info(carnet)
+
+
+        #verificar si el usuario existe en la base de datos
+        if len(db.execute("SELECT carnet from usuarios where carnet = ?", carnet)) != 0:
+            return(apology("Este carnet ya se encuentra registrado"))
+
+            #Puedo probar a poner un flash diciendole que ya tiene cuenta
+            #y redireccionarlo a la funcion iniciar sesion
+
+        else:
         #Ingresando datos a la database
-        db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
+            db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
 
         return redirect(url_for('inicio'))
 
@@ -75,6 +88,7 @@ def registro():
 @app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
     session.clear()
+    pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
     if request.method == "POST":
 
         if not request.form.get("carnet"):
@@ -85,13 +99,16 @@ def inicio():
 
 
         strcarnet = request.form.get("carnet")
-        try:
-            intcarnet = int(strcarnet)
-        except ValueError:
-            return apology("Ingrese solo numeros")
+
+        if re.fullmatch(pat_carnet, strcarnet):
+            strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
+            carnet = int(strcarnet)
+            print("********")
+            print(carnet)
+
 
         #pasw = generate_password_hash(request.form.get("password"))
-        usuario = db.execute("SELECT * FROM usuarios WHERE carnet = ?", intcarnet)
+        usuario = db.execute("SELECT * FROM usuarios WHERE carnet = ?", carnet)
 
         if len(usuario) != 1 or not check_password_hash(usuario[0]["hash"], request.form.get("password")):
             return apology("invalid username and/or password", 403)
