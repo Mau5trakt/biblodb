@@ -131,5 +131,6 @@ def inicio():
 
 @app.route('/homepage', methods=["GET", "POST"])
 def usuariohome():
+    print(sesion)
 
     return render_template("ulogin.html")
