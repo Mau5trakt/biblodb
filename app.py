@@ -55,7 +55,7 @@ def registro():
             for a in range(len(caracteres)):
                 numero = numero.replace(caracteres[a], "")
         else:
-            return apology("Ingrese un numero de celular valido", 400)
+            return apology("Ingrese un numero de celular valido",403)
 
         celular = int(numero)
 
