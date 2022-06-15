@@ -1,10 +1,12 @@
+import os
 import re
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for, current_app
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
@@ -12,6 +14,15 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+
+app.config["MAIL_DEFAULT_SENDER"] = os.environ["MAIL_DEFAULT_SENDER"]
+app.config["MAIL_PASSWORD"] = os.environ["MAIL_PASSWORD"]
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = os.environ["MAIL_USERNAME"]
+mail = Mail(app)
+
 Session(app)
 
 
@@ -34,7 +45,7 @@ def registro():
     if request.method == "POST":
         #patrones regex para el numero de telefono
         pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
-        pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
+        pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
 
         carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
 
@@ -94,7 +105,7 @@ def registro():
 @app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
     session.clear()
-    pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
+    pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
     if request.method == "POST":
 
         if not request.form.get("carnet"):
@@ -122,8 +133,21 @@ def inicio():
             return apology("invalid username and/or password", 403)
 
         session["carnet"] = usuario[0]["carnet"]
+        nombre = "Ayeye"
+        #session["nombre"] = usuario[0][""]
+        msg = Message("Hola", recipients=["danizipur@gmail.com"])
+        msg.body = "Cuerpo del mensaje mae"
+        msg.html = """<h1> Esto es un H1</h1>
+                        <h2>Esto ahota es un h2</h2>
+                        <p>Pero tambien puedo tener parrafos</p>
+                                                """
+        mail = Mail(current_app)
+
+        mail.send(msg)
+
 
         return redirect(url_for('usuariohome'))
+
 
     return render_template('isesion.html')
 
@@ -131,6 +155,5 @@ def inicio():
 
 @app.route('/homepage', methods=["GET", "POST"])
 def usuariohome():
-    print(sesion)
 
     return render_template("ulogin.html")
