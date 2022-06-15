@@ -155,5 +155,6 @@ def inicio():
 
 @app.route('/homepage', methods=["GET", "POST"])
 def usuariohome():
+    print("Only for the pr")
 
     return render_template("ulogin.html")
