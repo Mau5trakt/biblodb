@@ -1,6 +1,7 @@
 import os
 import re
 from cs50 import SQL
+from datetime import datetime
 from flask import Flask, flash, redirect, render_template, request, session, url_for, current_app
 from flask_session import Session
 from tempfile import mkdtemp
@@ -94,6 +95,13 @@ def registro():
         else:
         #Ingresando datos a la database
             db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
+            msg = Message("Registro Exitoso", recipients=[correo])
+            msg.html =f""" <h1> Hola {nombres} {apellidos}, bienvenido a Biblodb </h1>
+                            <p> Te has registrado exitosamente en la biblioteca </p>
+                            <p> mensaje generado automáticamente el: {datetime.now()} </p>
+                        """
+            mail = Mail(current_app)
+            mail.send(msg)
 
         return redirect(url_for('inicio'))
 
@@ -133,17 +141,6 @@ def inicio():
             return apology("invalid username and/or password", 403)
 
         session["carnet"] = usuario[0]["carnet"]
-        nombre = "Ayeye"
-        #session["nombre"] = usuario[0][""]
-        msg = Message("Hola", recipients=["danizipur@gmail.com"])
-        msg.body = "Cuerpo del mensaje mae"
-        msg.html = """<h1> Esto es un H1</h1>
-                        <h2>Esto ahota es un h2</h2>
-                        <p>Pero tambien puedo tener parrafos</p>
-                                                """
-        mail = Mail(current_app)
-
-        mail.send(msg)
 
 
         return redirect(url_for('usuariohome'))
