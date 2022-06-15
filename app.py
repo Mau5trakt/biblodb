@@ -45,7 +45,7 @@ def registro():
     if request.method == "POST":
         #patrones regex para el numero de telefono
         pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
-        pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
+        pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
 
         carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
 
@@ -105,7 +105,7 @@ def registro():
 @app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
     session.clear()
-    pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA-Z_]")
+    pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
     if request.method == "POST":
 
         if not request.form.get("carnet"):
