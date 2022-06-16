@@ -35,10 +35,22 @@ INNER JOIN libros on prestamo.id_libro = libros.id_libro INNER JOIN isbn_libro o
 '''
 db = SQL("sqlite:///database/biblo.db")
 
+
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+
 #Registroppp
-@app.route("/")
-@app.route("/index")
 @app.route('/register', methods=["GET","POST"])
+
+
+
+
 
 def registro():
     session.clear() #Sinceramente no recuerdo
@@ -143,14 +155,15 @@ def inicio():
         session["carnet"] = usuario[0]["carnet"]
 
 
-        return redirect(url_for('usuariohome'))
+        return redirect("/")
 
 
     return render_template('isesion.html')
 
 
 
-@app.route('/homepage', methods=["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
+@login_required
 def usuariohome():
     print("Only for the pr")
 
