@@ -49,9 +49,6 @@ def after_request(response):
 @app.route('/register', methods=["GET","POST"])
 
 
-
-
-
 def registro():
     session.clear() #Sinceramente no recuerdo
 
@@ -165,6 +162,11 @@ def inicio():
 @app.route('/', methods=["GET", "POST"])
 @login_required
 def usuariohome():
-    print("Only for the pr")
+    carnet = session["carnet"]
 
     return render_template("ulogin.html")
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+

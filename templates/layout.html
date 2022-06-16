@@ -20,6 +20,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,300&display=swap" rel="stylesheet">
 
         <title>Biblodb {% block title %}{% endblock %}</title>
 
@@ -29,7 +30,7 @@
         <nav class="bg-light border navbar navbar-expand-md navbar-light" style="background-color: #FFFFFF;">
             <div class="container-fluid">
                 {% if session["carnet"] %}
-                <a class="navbar-brand logo" href="/homepage">BibloDB</a>
+                <a class="navbar-brand logo" href="/">BibloDB</a>
                 {% else %}
                 <a class="navbar-brand logo" href="#">BibloDB</a>
                 {% endif %}
@@ -45,7 +46,6 @@
                 </div>
             </div>
         </nav>
-        { }
 
         {% if get_flashed_messages() %}
             <header>
