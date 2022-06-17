@@ -20,8 +20,43 @@
 
     <div class="historial">
         <h1>Historial de prestamo</h1>
-        <h2> Funciona</h2>
+
+        {% if consulta | length > 0  %}
+        <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"> Id Prestamo </th>
+                        <th scope="col"> Titulo </th>
+                        <th scope="col"> Autor </th>
+                        <th scope="col"> Edicion </th>
+                        <th scope="col"> año </th>
+                        <th scope="col"> Clasificacion </th>
+                        <th scope="col"> Fecha </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in consulta %}
+                    <tr>
+                        <th> {{ a["id_prestamo"] }} </th>
+                        <td> {{ a["titulo"] }}</td>
+                        <td> {{ a["nombre"] }} </td>
+                        <td> {{ a["edicion"] }}</td>
+                        <td> {{ a["año"] }}</td>
+                        <td> {{ a["clasificacion"] }}</td>
+                        <td> {{ a["fecha_de_prestamo"] }}</td>
+
+                    </tr>
+                    {%endfor%}
+
+                </tbody>
+            </table>
+
+
+
+    {% else %}
         <h2> Su historial de prestamos se encuentra vacio</h2>
+    {% endif %}
     </div>
 
 </div>
