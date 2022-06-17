@@ -161,9 +161,8 @@ def inicio():
 @login_required
 def usuariohome():
     carnet = session["carnet"]
-    consulta = db.execute('SELECT * FROM prestamo where carnet = ? and status = 0 ', carnet)
-    print(len(consulta)
-    return render_template('ulogin.html', carnet=carnet)
+    consulta = db.execute('SELECT id_prestamo, titulo, nombre, edicion, año, clasificacion, fecha_de_prestamo FROM prestamo INNER JOIN libros on (prestamo.id_libro = libros.id_libro) INNER JOIN libro_autor la on libros.id_libro = la.id_libro INNER JOIN autor a on a.id_autor = la.id_autor where carnet = ? and status = 0', carnet)
+    return render_template('ulogin.html', consulta=consulta)
 
 
 
