@@ -83,8 +83,6 @@ def registro():
         if re.fullmatch(pat_carnet, strcarnet):
             strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
             carnet = int(strcarnet)
-            print("********")
-            print(carnet)
         else:
             return apology("Ingrese un numero de carnet válido", 400)
 
@@ -163,8 +161,13 @@ def inicio():
 @login_required
 def usuariohome():
     carnet = session["carnet"]
+    consulta = db.execute('SELECT * FROM prestamo where carnet = ? and status = 0 ', carnet)
+    print(len(consulta)
+    return render_template('ulogin.html', carnet=carnet)
 
-    return render_template("ulogin.html")
+
+
+
 @app.route("/logout")
 def logout():
     session.clear()
