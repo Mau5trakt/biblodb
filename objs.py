@@ -24,6 +24,7 @@ class Libro():
 
         autor = db.execute("SELECT * from libro_autor INNER JOIN autor ON libro_autor.id_autor = autor.id_autor WHERE libro_autor.id_libro = ?", id_libro)
         autor = autor[0]
+
         return autor
 # fecha_de_prestamo	id_libro	carnet	id_trabajador	fecha_de_devolucion	renovaciones	status
 def ver_press(carnet, status):
@@ -54,4 +55,4 @@ def ver_press(carnet, status):
         encontrados.append(respuesta)
 
 
-    return encontrados 
+    return encontrados
