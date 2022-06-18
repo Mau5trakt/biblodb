@@ -176,6 +176,11 @@ h1{
 h2{
   color: #f3f6f4;
 }
+.clasificacion{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
 
 
 .historial{
