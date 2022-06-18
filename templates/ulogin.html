@@ -21,8 +21,8 @@
     <div class="historial">
         <h1>Historial de prestamo</h1>
 
-        {% if consulta | length > 0  %}
-        <table class="table table-hover">
+        {% if historial | length > 0  %}
+        <table class="table table-hover table-responsive">
                 <thead>
                     <tr>
                         <th scope="col"> Id Prestamo </th>
@@ -36,15 +36,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for a in consulta %}
+                    {% for a in historial %}
                     <tr>
                         <th> {{ a["id_prestamo"] }} </th>
-                        <td> {{ a["titulo"] }}</td>
-                        <td> {{ a["nombre"] }} </td>
+                        <td> {{ a["libro"] }}</td>
+                        <td> {{ a["autor"] }} </td>
                         <td> {{ a["edicion"] }}</td>
-                        <td> {{ a["año"] }}</td>
-                        <td> {{ a["clasificacion"] }}</td>
-                        <td> {{ a["fecha_de_prestamo"] }}</td>
+                        <td> {{ a["year"] }}</td>
+                        <td class="clasificacion"> {{ a["clasificacion"] }}</td>
+                        <td> {{ a["fecha_prestamo"] }}</td>
 
                     </tr>
                     {%endfor%}
