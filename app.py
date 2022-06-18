@@ -8,6 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
 from flask_mail import Mail, Message
+from objs import ver_press
 
 app = Flask(__name__)
 
@@ -161,8 +162,16 @@ def inicio():
 @login_required
 def usuariohome():
     carnet = session["carnet"]
-    consulta = db.execute('SELECT id_prestamo, titulo, nombre, edicion, año, clasificacion, fecha_de_prestamo FROM prestamo INNER JOIN libros on (prestamo.id_libro = libros.id_libro) INNER JOIN libro_autor la on libros.id_libro = la.id_libro INNER JOIN autor a on a.id_autor = la.id_autor where carnet = ? and status = 0', carnet)
-    return render_template('ulogin.html', consulta=consulta)
+    historial = []
+
+    for item in ver_press(carnet, 0):
+        historial.append(item)
+
+    print(historial)
+    print("mae si funciona")
+
+
+    return render_template('ulogin.html', historial=historial)
 
 
 
