@@ -56,3 +56,8 @@ def ver_press(carnet, status):
 
 
     return encontrados
+
+def unicarreras():
+    carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
+
+    return carreras
