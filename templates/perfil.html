@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    | Perfil
+{% endblock %}
+
+{% block links %}
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/logout">Cerrar Sesion</a></li>
+{% endblock %}
+
+{% block contenido %}
+    <div class="main-container">
+        <div class="historial">
+
+            <h1 class="h1-perfil">Edita Tu Perfil</h1>
+
+            <form id="formulario"  class="form" action="/perfil" method="POST">
+
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" value="{{ estudiante["nombres"] }}" required >
+                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" value="{{ estudiante["apellidos"] }}"  required>
+                <input type="text" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico" value="{{ estudiante["email"] }}" required>
+                <input type="password" class="form-control" id="pasw" name="pasw" placeholder="Contraseña" required>
+                <input type="password" class="form-control" id="confpasw" name="confpasw" placeholder="Confirmar Contraseña" required>
+                <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Número de Teléfono" value="{{ estudiante["telefono"] }}" required>
+
+                <select class="form-select" aria-label="Default select example" id="carrera" name="carrera" required>
+                    <option selected>{{ estudiante["carrera"] }}</option>
+                    {% for car in carreras %}
+                    <option value="{{ car }}">{{ car }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" id="condicion" class="fadeIn fourth" value="Actualizar">
+
+
+            </form>
+    </div>
+</div>
+
+
+
+{% endblock %}
