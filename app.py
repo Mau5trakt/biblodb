@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
 from flask_mail import Mail, Message
-from objs import ver_press
+from objs import ver_press, unicarreras
 
 app = Flask(__name__)
 
@@ -36,6 +36,12 @@ INNER JOIN libros on prestamo.id_libro = libros.id_libro INNER JOIN isbn_libro o
 '''
 db = SQL("sqlite:///database/biblo.db")
 
+#patrones regex para el numero de telefono y carnet
+pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
+pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
+
+
+
 
 @app.after_request
 def after_request(response):
@@ -51,15 +57,9 @@ def after_request(response):
 
 
 def registro():
-    session.clear() #Sinceramente no recuerdo
+    session.clear()
 
     if request.method == "POST":
-        #patrones regex para el numero de telefono
-        pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
-        pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
-
-        carreras = ["Arquitectura", "Ing. Computación", "Ing. Eléctrica", "Ing. Eléctrónica", "Ing. Química" ]
-
 
         nombres = request.form.get("nombres")
         apellidos = request.form.get("apellidos")
@@ -90,7 +90,7 @@ def registro():
 
 
 
-        app.logger.info(carnet)
+        #app.logger.info(carnet)
 
 
         #verificar si el usuario existe en la base de datos
@@ -102,16 +102,22 @@ def registro():
 
         else:
         #Ingresando datos a la database
-            db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
-            msg = Message("Registro Exitoso", recipients=[correo])
-            msg.html =f""" <h1> Hola {nombres} {apellidos}, bienvenido a Biblodb </h1>
+            try:
+                db.execute("INSERT INTO usuarios(carnet, nombres, apellidos, email, hash, carrera, telefono) VALUES(?,?,?,?,?,?,?)", carnet, nombres, apellidos, correo, hash, carrera, celular)
+                msg = Message("Registro Exitoso", recipients=[correo])
+                msg.html =f""" <h1> Hola {nombres} {apellidos}, bienvenido a Biblodb </h1>
                             <p> Te has registrado exitosamente en la biblioteca </p>
                             <p> mensaje generado automáticamente el: {datetime.now()} </p>
                         """
-            mail = Mail(current_app)
-            mail.send(msg)
+                mail = Mail(current_app)
+                mail.send(msg)
 
-        return redirect(url_for('inicio'))
+                return redirect(url_for('inicio'))
+
+            except:
+                return redirect(url_for('inicio'))
+
+
 
 
     return render_template("index.html")
@@ -121,7 +127,6 @@ def registro():
 @app.route('/iniciar', methods=["GET", "POST"])
 def inicio():
     session.clear()
-    pat_carnet = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}[a-zA*-Z_]")
     if request.method == "POST":
 
         if not request.form.get("carnet"):
@@ -136,8 +141,6 @@ def inicio():
         if re.fullmatch(pat_carnet, strcarnet):
             strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
             carnet = int(strcarnet)
-            print("********")
-            print(carnet)
         else:
             return apology("Ingrese un numero de carnet válido", 403)
 
@@ -167,10 +170,6 @@ def usuariohome():
     for item in ver_press(carnet, 0):
         historial.append(item)
 
-    print(historial)
-    print("mae si funciona")
-
-
     return render_template('ulogin.html', historial=historial)
 
 
@@ -180,4 +179,52 @@ def usuariohome():
 def logout():
     session.clear()
     return redirect("/")
+
+
+@app.route('/perfil', methods=["GET", "POST"])
+@login_required
+def perfil():
+    carnet = session["carnet"]
+
+    estudiante = db.execute('SELECT * FROM usuarios WHERE carnet = ?', carnet)[0]
+
+
+    #ucarrera = estudiante["carrera"]
+    carreras = unicarreras()
+    carreras.remove(estudiante["carrera"])
+    if request.method == "POST":
+
+        if request.form.get("pasw") != request.form.get("confpasw"):
+            return apology("Las contraseñas deben coincidir")
+
+
+
+        nombres = request.form.get("nombre")
+        apellidos = request.form.get("apellido")
+        correo = request.form.get("correo")
+        hash = generate_password_hash(request.form.get("pasw"))
+        carrera = request.form.get("carrera")
+        numero = request.form.get("telefono")
+
+        if re.fullmatch(pat_celular, numero):
+            caracteres = "+- "
+            for a in range(len(caracteres)):
+                numero = numero.replace(caracteres[a], "")
+        else:
+            return apology("Ingrese un numero de celular valido",403)
+
+        celular = int(numero)
+
+        db.execute("UPDATE usuarios SET nombres = ?, apellidos = ?, email = ?, hash = ?, carrera = ?, telefono =?  WHERE carnet = ? ",
+                   nombres,apellidos,correo,hash,carrera,celular,carnet)
+        flash("Perfil actualizado con exito")
+        return redirect(url_for('usuariohome'))
+
+
+
+
+
+        #print(carreras)
+
+    return render_template('perfil.html', carnet=carnet, estudiante=estudiante, carreras=carreras)
 
