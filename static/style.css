@@ -182,6 +182,23 @@ h2{
   align-items: center;
 }
 
+.h1-perfil{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form{
+   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
 
 .historial{
 
@@ -193,6 +210,7 @@ border-radius: 27px;
 }
 
 .main-container{
+  padding-top: 2%;
   display:flex;
   justify-content:center;
 }
