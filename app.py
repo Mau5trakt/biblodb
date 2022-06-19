@@ -8,6 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
 from flask_mail import Mail, Message
+from objs import ver_press
 
 app = Flask(__name__)
 
@@ -83,8 +84,6 @@ def registro():
         if re.fullmatch(pat_carnet, strcarnet):
             strcarnet = re.sub("\+|\ '|\-|[a-zA-Z_]","",strcarnet)
             carnet = int(strcarnet)
-            print("********")
-            print(carnet)
         else:
             return apology("Ingrese un numero de carnet válido", 400)
 
@@ -163,8 +162,20 @@ def inicio():
 @login_required
 def usuariohome():
     carnet = session["carnet"]
+    historial = []
 
-    return render_template("ulogin.html")
+    for item in ver_press(carnet, 0):
+        historial.append(item)
+
+    print(historial)
+    print("mae si funciona")
+
+
+    return render_template('ulogin.html', historial=historial)
+
+
+
+
 @app.route("/logout")
 def logout():
     session.clear()

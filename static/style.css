@@ -158,13 +158,14 @@ font-size: 25px;
 font-style: normal;
 text-align: center;
 color: #000000;
+  margin-left: 20px;
 
 
 }
 
 .icono{
-  height: 55px;
-  width: 55px;
+  height: 70px;
+  width: 70px;
 }
 
 
@@ -172,11 +173,21 @@ h1{
   color: #f3f6f4;
 }
 
+h2{
+  color: #f3f6f4;
+}
+.clasificacion{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .historial{
 
 position: absolute;
 width: 95%;
-padding: 2px;
+padding: 2%;
 background: rgba(217, 217, 217, 0.35);
 border-radius: 27px;
 }
