@@ -60,7 +60,7 @@ def registro():
     session.clear()
 
     if request.method == "POST":
-
+        carreras = unicarreras()
         nombres = request.form.get("nombres")
         apellidos = request.form.get("apellidos")
         carrera = request.form.get("carrera")
