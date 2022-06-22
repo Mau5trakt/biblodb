@@ -228,3 +228,5 @@ def perfil():
 
     return render_template('perfil.html', carnet=carnet, estudiante=estudiante, carreras=carreras)
 
+
+
