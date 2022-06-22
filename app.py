@@ -146,12 +146,19 @@ def inicio():
 
 
         #pasw = generate_password_hash(request.form.get("password"))
-        usuario = db.execute("SELECT * FROM usuarios WHERE carnet = ?", carnet)
+        if strcarnet[:4] == "9999":
+            print("jala")
+            usuario = db.execute("SELECT * FROM trabajadores WHERE id_trabajador = ?", carnet)
+            return url_for('admin')
+        else:
+            usuario = db.execute("SELECT * FROM usuarios WHERE carnet = ?", carnet)
 
         if len(usuario) != 1 or not check_password_hash(usuario[0]["hash"], request.form.get("password")):
             return apology("invalid username and/or password", 403)
 
         session["carnet"] = usuario[0]["carnet"]
+
+
 
 
         return redirect("/")
@@ -227,6 +234,15 @@ def perfil():
         #print(carreras)
 
     return render_template('perfil.html', carnet=carnet, estudiante=estudiante, carreras=carreras)
+
+
+@app.route('/administrador', methods=["GET", "POST"])
+@login_required
+def admin():
+    print("placeholder")
+
+    return render_template('admin.html')
+
 
 
 
