@@ -1,0 +1,35 @@
+{% extends "layout.html"%}
+
+{% block title %}
+    Busqueda
+{% endblock%}
+
+
+
+{% block links %}
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/perfil">Perfil</a></li>
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/logout">Cerrar Sesion</a></li>
+{% endblock %}
+
+{% block contenido %}
+
+<div class ="main-container">
+    <div class="historial">
+    <form onsubmit = "buscar_libros(this); return false;">
+        <div class="input-group">
+        <input type="text" class="form-control" id="formControlInput" placeholder="Introduce Titulo, Autor o Tema" onkeyup="actualizar_listas(this.value);" list="lista_libros" name = "inputbusqueda">
+        <button  id="condicion" class="myButton fadeIn fourth">Buscar</button>
+        <datalist id="lista_libros" >
+        </datalist>
+        </div>
+    </form>
+
+    <div id="listado"> </div>
+    </div>
+
+
+</div>
+
+<script src="./static/busqueda.js"> </script>
+
+{% endblock %}
