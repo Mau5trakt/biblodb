@@ -2,13 +2,14 @@ import os
 import re
 from cs50 import SQL
 from datetime import datetime
-from flask import Flask, flash, redirect, render_template, request, session, url_for, current_app
+from flask import Flask, flash, redirect, render_template, request, session, url_for, current_app, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import apology, login_required
+from helpers import apology, login_required, admin_required
 from flask_mail import Mail, Message
-from objs import ver_press, unicarreras
+from functions import ver_press, unicarreras, buscar_libro, verificar_vencido, verificar_disponibles, verificar_enprestamo, verificar_nolotenga, fecha_prestamo
+from datetime import timedelta, date
 
 app = Flask(__name__)
 
@@ -27,14 +28,7 @@ mail = Mail(app)
 
 Session(app)
 
-
-'''
-SELECT usuarios.nombres FROM usuarios INNER JOIN prestamo on usuarios.carnet = prestamo.carnet
-INNER JOIN libros on prestamo.id_libro = libros.id_libro INNER JOIN isbn_libro on libros.id_libro = isbn_libro.id_libro WHERE isbn_libro.isbn = "9786071505408";
-
-
-'''
-db = SQL("sqlite:///database/biblo.db")
+db = SQL("sqlite:///database/respaldo.db")
 
 #patrones regex para el numero de telefono y carnet
 pat_celular = re.compile(r"(((\+[0-9]{1,2}|00[0-9]{1,2})[-\ .]?)?)(\d[-\ .]?){5,15}")
@@ -148,8 +142,9 @@ def inicio():
         #pasw = generate_password_hash(request.form.get("password"))
         if strcarnet[:4] == "9999":
             print("jala")
-            usuario = db.execute("SELECT * FROM trabajadores WHERE id_trabajador = ?", carnet)
-            return url_for('admin')
+            trabajador = db.execute("SELECT * FROM trabajadores WHERE id_trabajador = ?", carnet)
+            session["id_trabajador"] = trabajador[0]["id_trabajador"]
+            return redirect (url_for('admin'))
         else:
             usuario = db.execute("SELECT * FROM usuarios WHERE carnet = ?", carnet)
 
@@ -237,12 +232,79 @@ def perfil():
 
 
 @app.route('/administrador', methods=["GET", "POST"])
-@login_required
+@admin_required
 def admin():
     print("placeholder")
 
     return render_template('admin.html')
 
 
+@app.route('/busqueda', methods=["GET", "POST"])
+@login_required
+def busqueda():
+    if request.method == "POST":
+        busqueda = []
+        q = request.form.get("inputbusqueda")
+        for item in buscar_libro(q):
+            busqueda.append(item)
+
+        return render_template('tabla.html', historial=busqueda)
+    else:
+        return render_template('buscador.html')
+
+
+# URLS de consultaas
+
+@app.route("/libros-resultados", methods = ["POST"])
+def libros_resultados():
+    q = request.form.get("q")
+
+    datos = []
+
+    libros = db.execute("SELECT * FROM libros where titulo like ? GROUP BY titulo", "%"+q+"%")
+
+
+    for i in libros:
+        datos.append({"titulo":i["titulo"]})
+
+     # where autor  = q or nombre = q
+
+    return jsonify(datos)
+
+
+@app.route("/libros-info", methods = ["POST"])
+def libros_info():
+    q = request.form.get("q")
+    print(q)
+
+    libros = db.execute("SELECT * FROM libros WHERE id_libro = ?", q)
+
+    return render_template("info-libro.html", libro=libros[0])
+
+@app.route("/solicitud_domicilio", methods = ["POST"])
+def solicitud_domicilio():
+    carnet = session["carnet"]
+    isbn = request.form.get("isbn")
+
+    verificadores = []
+
+    ver1 = verificar_vencido(carnet)
+    verificadores.append(ver1)
+
+    ver2 = verificar_disponible(isbn)
+    verificadores.append(ver2)
+
+    ver3 = verificar_enprestamo(carnet)
+    verificadores.append(ver3)
+
+    ver4 = verificar_nolotenga(carnet, isbn)
+    verificadores.append(ver4)
+
+    if False not in verificadores:
+        #db.execute("INSERT INTO prestamo ()) #me quedo en la parte del intert
+        return "Prestamo solicitado",200
+        #Haciendo el update
+    else:
+        return "No se puede hacer el prestamo en este momento",400
 
 
