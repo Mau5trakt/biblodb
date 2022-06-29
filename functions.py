@@ -62,7 +62,8 @@ def ver_press(carnet, status):
             "descriptor": l.get_descriptor(),
             "edicion": l.get_edicion(),
             "imagen": l.get_imagen(),
-            "editorial": l.get_editorial()
+            "editorial": l.get_editorial(),
+            "fecha_prestamo": prestamo["fecha_prestamo"]
         }
 
         encontrados.append(respuesta)
@@ -156,14 +157,14 @@ def verificar_vencido(carnet):
 
 
 def verificar_enprestamo(carnet):
-    cantidad = db.execute("SELECT COUNT(*) from prestamo WHERE prestamo.u_carnet = ? AND status = 0", carnet)[0]["COUNT(*)"]
+    cantidad = db.execute("SELECT COUNT(*) from prestamo WHERE prestamo.u_carnet = ? AND status = 1", carnet)[0]["COUNT(*)"]
     if cantidad < 2 :
         return True
     else:
         return False
 
 def verificar_nolotenga(carnet, isbn):
-    cantidad = db.execute("SELECT COUNT(*) from prestamo INNER JOIN libros ON(prestamo.libro_id = libros.id_libro) WHERE u_carnet = ? and isbn = ? and status = 1", carnet, isbn)
+    cantidad = db.execute("SELECT COUNT(*) from prestamo INNER JOIN libros ON(prestamo.libro_id = libros.id_libro) WHERE u_carnet = ? and isbn = ? and status = 1", carnet, isbn)[0]["COUNT(*)"]
     if cantidad == 0:
         return True
     else:
