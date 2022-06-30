@@ -34,6 +34,8 @@ function buscar_libros(formulario){
     console.log("aaaaaaaaaaaaaaaaaaaaaa");
     let datos = new FormData(formulario);
 
+    let libros_tr = document.getElementById("libros")
+
     let http = new XMLHttpRequest();
     let url = "/busqueda";
 
@@ -53,6 +55,44 @@ function buscar_libros(formulario){
     }
     return false;
 }
+
+function aprobar(e){
+    console.log(e.target);
+    if(e.target.nodeName == "TD"){
+        let linea = e.target.parentNode;
+        let id = linea.dataset.id;
+
+
+        let http = new XMLHttpRequest();
+        let url = "/administrador";
+
+        let datos = new FormData();
+        datos.append("q", id);
+
+        http.open("POST", url);
+        http.send(datos);
+
+        http.onreadystatechange = function(){
+            if(http.readyState == 4){
+                if(http.status == 200){
+                    let datos = http.responseText;
+
+                    swal.fire({
+                        "title": "Llega",
+                        "html": datos,
+                        "showConfirmButton:": false,
+                    });
+                }
+            }
+        }
+
+
+
+
+
+    }
+}
+
 
 function info_libro(e){
     console.log(e.target);
@@ -91,11 +131,12 @@ function info_libro(e){
     }
 }
 
-function solicitar_domicilio(isbn){
+function solicitar_domicilio(isbn, id_libro){
     console.log(isbn);
-
+    console.log(id_libro);
     let datos  =  new FormData();
     datos.append("isbn", isbn)
+    datos.append("id_libro", id_libro)
 
     let url = "/solicitud_domicilio";
 
