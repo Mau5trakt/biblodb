@@ -167,12 +167,16 @@ def inicio():
 @login_required
 def usuariohome():
     carnet = session["carnet"]
+    activos = db.execute("SELECT * FROM prestamo INNER JOIN libros on (prestamo.libro_id = libros.id_libro) where u_carnet = ? AND status = 1 OR status = 2;", carnet)
+    print(activos)
+
+
     historial = []
 
     for item in ver_press(carnet, 0):
         historial.append(item)
 
-    return render_template('ulogin.html', historial=historial, libros_total=historial)
+    return render_template('ulogin.html', historial=historial, activos=activos)
 
 
 
