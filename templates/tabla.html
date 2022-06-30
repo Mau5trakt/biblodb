@@ -1,0 +1,27 @@
+<table class="table table-hover table-responsive">
+    <thead>
+        <tr>
+            <th scope="col"> Titulo </th>
+            <th scope="col"> Autor </th>
+            <th scope="col"> Edicion </th>
+            <th scope="col"> año </th>
+            <th scope="col"> Clasificacion </th>
+            <th scope="col"> Descriptor </th>
+
+        </tr>
+    </thead>
+    <tbody id = "libros">
+        {% for a in historial %}
+        <tr data-id ="{{a['id_libro']}}">
+            <td> {{ a["titulo"] }} </td>
+            <td> {{ a["autor"] }} </td>
+            <td> {{a["edicion"] }} </td>
+            <td> {{ a["year"] }}  </td>
+            <td> {{ a["clasificacion"] }} </td>
+            <td>  {{ a["descriptor"]}} </td>
+
+        </tr>
+        {%endfor%}
+
+    </tbody>
+</table>

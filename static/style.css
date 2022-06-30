@@ -24,13 +24,27 @@ a {
     margin: 40px 8px 10px 8px;
     color: #cccccc;
   }
+
+  @media screen and (max-width: 1400px) {
+    .wrapper1{
+      margin-top: 8%;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    .wrapper1{
+      margin-top: 30%;
+    }
+  }
+
+
+
 .wrapper {
     display: flex;
     align-items: center;
     flex-direction: column;
-    /*justify-content: center;*/
+    justify-content: center;
     width: 100%;
-    /*min-height: 100%;*/
+  position: relative;
   }
 
   #formContent {

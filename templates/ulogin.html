@@ -4,9 +4,12 @@
     Bienvenido a Biblodb
 {% endblock %}
 
+
 {% block links %}
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/busqueda">Buscar</a></li>
     <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/perfil">Perfil</a></li>
     <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/logout">Cerrar Sesion</a></li>
+
 {% endblock %}
 
 
@@ -22,7 +25,7 @@
         <h1 class="h1-perfil">Historial de prestamo</h1>
 
         {% if historial | length > 0  %}
-        <table class="table table-hover table-responsive">
+        <table class="col-12 table table-hover table-responsive">
                 <thead>
                     <tr>
                         <th scope="col"> Id Prestamo </th>
@@ -39,7 +42,7 @@
                     {% for a in historial %}
                     <tr>
                         <th> {{ a["id_prestamo"] }} </th>
-                        <td> {{ a["libro"] }}</td>
+                        <td> {{ a["titulo"] }}</td>
                         <td> {{ a["autor"] }} </td>
                         <td> {{ a["edicion"] }}</td>
                         <td> {{ a["year"] }}</td>

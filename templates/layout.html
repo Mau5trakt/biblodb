@@ -16,6 +16,10 @@
 
         <link href="../static/style.css" rel="stylesheet">
 
+        <!-- sweetalert2 -->
+        <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css" rel="stylesheet">
+
+
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,9 +37,9 @@
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                {% if session %}
-                <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="input-group-right">
-                {%endif%}
+                {% block buscador %}
+
+                {%endblock%}
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ms-auto mt-2">
                             {%block links%}
@@ -57,5 +61,6 @@
         {%block contenido%} {% endblock %}
 
     </body>
-
+    <!-- sweetalert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 </html>

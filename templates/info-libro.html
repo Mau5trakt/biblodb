@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="row g-0">
+      <div class="col-5 col-sm-4">
+        <img src="{{libro.imagen}}" class="img-fluid w-100" alt="card-horizontal-image">
+      </div>
+      <div class="col-7 col-sm-8">
+        <div class="card-body">
+          <h5 class="card-title">{{libro.titulo}}</h5>
+            <p class="card-text">{{libro.id_libro}}</p>
+          <p class="card-text">{{libro.autor}}</p>
+          <p class="card-text">{{libro.edicion}}</p>
+          <p class="card-text">{{libro.year}}</p>
+          <p class="card-text">{{libro.clasificacion}}</p>
+          <p class="card-text">{{libro.descriptor}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form >
+
+    <button type="submit" class="btn btn-primary" onclick = "solicitar_domicilio('{{libro.isbn}}', '{{libro.id_libro}}'); return false;">Solicitar domicilio</button>
+    <button type="submit" class="btn btn-primary" onclick = "solicitar_sala('{{libro.isbn}}{{ libro.id_libro }} }}'); return false;">Solicitar Sala</button>
+</form>
+
+
