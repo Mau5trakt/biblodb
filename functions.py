@@ -55,6 +55,7 @@ def ver_press(carnet, status):
             "carnet": carnet,
             "carrera": estudiante["carrera"],
             "id_prestamo": prestamo["id_prestamo"],
+            "id_libro": prestamo["libro_id"],
             "titulo": l.get_titulo(),
             "autor": l.get_autor(),
             "year": l.get_year(),
@@ -113,12 +114,6 @@ def buscar_libro(q):
 
     return encontrados
 
-def insertar(datos, cantidad):
-    for i in range(cantidad):
-        db.execute("INSERT INTO libros (isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", datos["isbn"], datos["titulo"], datos["autor"], datos["year"], datos["clasificacion"], datos["descriptor"], datos["edicion"], datos["imagen"], datos["editorial"])
-        inventario_id = db.execute("SELECT COUNT(libros.id_libro) FROM libros")[0]["COUNT(libros.id_libro)"]
-        db.execute("INSERT INTO inventario (libro_id, fecha_ingreso) VALUES (?, ?)", inventario_id, date.today())
-
 #Verificadores
 
 def verificar_disponibles(isbn):
@@ -157,7 +152,7 @@ def verificar_vencido(carnet):
 
 
 def verificar_enprestamo(carnet):
-    cantidad = db.execute("SELECT COUNT(*) from prestamo WHERE prestamo.u_carnet = ? AND status = 1", carnet)[0]["COUNT(*)"]
+    cantidad = db.execute("SELECT COUNT(*) from prestamo WHERE prestamo.u_carnet = ? AND status = 1 or status = 2", carnet)[0]["COUNT(*)"]
     if cantidad < 2 :
         return True
     else:
@@ -170,12 +165,49 @@ def verificar_nolotenga(carnet, isbn):
     else:
         return False
 
+def verificar_entramite(carnet, isbn): #Verificar que no tenga en tramite el mismo libro varias veces
+    cantidad = db.execute("SELECT COUNT(*) from prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where u_carnet = ? and status = 2 and isbn = ?",carnet,isbn)[0]["COUNT(*)"]
+    if cantidad == 0:
+        return True
+    else:
+        return False
+
+
 def fecha_prestamo():
     hoy = date.today()
     agg = timedelta(days=7)
     fecha_prestamo = hoy + agg
     return str(fecha_prestamo)
 
+def tramites():
+    entramite = []
+    consulta = db.execute("SELECT * FROM prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where status = 2")
+    for libro in consulta:
+
+        l = Libro(libro["id_libro"])
+
+        respuesta = {
+            "id_libro": libro["id_libro"],
+            "id_prestamo": libro["id_prestamo"],
+            "usuario": libro["u_carnet"],
+            "isbn": libro["isbn"],
+            "titulo": libro["titulo"],
+            "autor": l.get_autor(),
+            "year": l.get_year(),
+            "clasificacion": l.get_clasificacion(),
+            "descriptor": l.get_descriptor(),
+            "edicion": l.get_edicion(),
+            "imagen": l.get_imagen(),
+            "editorial": l.get_editorial()
+        }
+
+        entramite.append(respuesta)
 
 
+    return entramite
 
+def agregar_libros(cantidad, isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial):
+    for a in range(cantidad):
+        db.execute("INSERT INTO libros (isbn, titulo, autor, year, clasificaion, descriptor, edicion, imagen, editorial) VALUES (?,?,?,?,?,?,?,?,?)", isbn,titulo,autor,year,clasificacion,descriptor, edicion,imagen, editorial)
+        inventario_id = db.execute("SELECT COUNT(libros.id_libro) FROM libros")[0]["COUNT(libros.id_libro)"]
+        db.execute("INSERT INTO inventario (libro_id, fecha_ingreso) VALUES (?,?)", inventario_id, date.today())
