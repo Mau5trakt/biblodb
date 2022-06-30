@@ -209,7 +209,7 @@ def tramites():
 
     return entramite
 
-def confirmar_cantidad_insertar(cantidad):
+def confirmar_numerico(cantidad):
     if re.fullmatch(pat_numerico, cantidad):
         qty = int(cantidad)
         return qty
@@ -219,6 +219,6 @@ def confirmar_cantidad_insertar(cantidad):
 
 def agregar_libros(cantidad, isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial):
     for a in range(cantidad):
-        db.execute("INSERT INTO libros (isbn, titulo, autor, year, clasificaion, descriptor, edicion, imagen, editorial) VALUES (?,?,?,?,?,?,?,?,?)", isbn,titulo,autor,year,clasificacion,descriptor, edicion,imagen, editorial)
+        db.execute("INSERT INTO libros (isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial) VALUES (?,?,?,?,?,?,?,?,?)", isbn,titulo,autor,year,clasificacion,descriptor, edicion,imagen, editorial)
         inventario_id = db.execute("SELECT COUNT(libros.id_libro) FROM libros")[0]["COUNT(libros.id_libro)"]
         db.execute("INSERT INTO inventario (libro_id, fecha_ingreso) VALUES (?,?)", inventario_id, date.today())
