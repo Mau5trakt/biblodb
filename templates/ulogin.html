@@ -15,12 +15,43 @@
 
 {% block contenido %}
 
-<div class ="main-container">
+<div class ="main-container bg-light">
 
-    <div class="books-container">
 
+    <div class="row">
+        {% for libro in libros_total %}
+
+            <div class="col">
+                {{loop.index}}
+                <div >
+                    <div class="card">
+                        <div class="row g-0">
+                          <div class="col-5 col-sm-4">
+                            <img src="{{libro.imagen}}" class="img-fluid w-100" alt="card-horizontal-image">
+                          </div>
+                          <div class="col-7 col-sm-8">
+                            <div class="card-body">
+                              <h5 class="card-title">{{libro.titulo}}</h5>
+                                <p class="card-text">{{libro.id_libro}}</p>
+                              <p class="card-text">{{libro.autor}}</p>
+                              <p class="card-text">{{libro.edicion}}</p>
+                              <p class="card-text">{{libro.year}}</p>
+                              <p class="card-text">{{libro.clasificacion}}</p>
+                              <p class="card-text">{{libro.descriptor}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <form >
+                </div>
+            </div>
+
+        {% endfor %}
     </div>
 
+</div>
+    <div class ="main-container">
     <div class="historial">
         <h1 class="h1-perfil">Historial de prestamo</h1>
 
