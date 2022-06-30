@@ -15,29 +15,32 @@
 
 {% block contenido %}
 
-<div class ="main-container bg-light">
+<div class ="main-container">
 
 
     <div class="row">
-        {% for libro in libros_total %}
+        {% for libro in activos %}
 
-            <div class="col">
+            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
                 {{loop.index}}
                 <div >
-                    <div class="card">
+                    <div class="tarjeta">
                         <div class="row g-0">
                           <div class="col-5 col-sm-4">
                             <img src="{{libro.imagen}}" class="img-fluid w-100" alt="card-horizontal-image">
+                            <div class="circulito">
+                            </div>
+
                           </div>
                           <div class="col-7 col-sm-8">
                             <div class="card-body">
-                              <h5 class="card-title">{{libro.titulo}}</h5>
-                                <p class="card-text">{{libro.id_libro}}</p>
-                              <p class="card-text">{{libro.autor}}</p>
-                              <p class="card-text">{{libro.edicion}}</p>
-                              <p class="card-text">{{libro.year}}</p>
-                              <p class="card-text">{{libro.clasificacion}}</p>
-                              <p class="card-text">{{libro.descriptor}}</p>
+                              <h5 class="h1tarjeta">{{libro.titulo}}</h5><br>
+
+                              <p class="textotarjeta">Autor: {{libro.autor}}</p>
+                              <p class="textotarjeta">Edicion: {{libro.edicion}}</p>
+                              <p class="textotarjeta">Año: {{libro.year}}</p>
+                              <p class="textotarjeta">Clasificacion: {{libro.clasificacion}}</p>
+                              <p class="textotarjeta">Tema: {{libro.descriptor}}</p>
                             </div>
                           </div>
                         </div>
