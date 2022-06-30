@@ -6,6 +6,7 @@
       <div class="col-7 col-sm-8">
         <div class="card-body">
           <h5 class="card-title">{{libro.titulo}}</h5>
+            <p class="card-text">{{libro.id_libro}}</p>
           <p class="card-text">{{libro.autor}}</p>
           <p class="card-text">{{libro.edicion}}</p>
           <p class="card-text">{{libro.year}}</p>
@@ -18,8 +19,8 @@
 
   <form >
 
-    <button type="submit" class="btn btn-primary" onclick = "solicitar_domicilio('{{libro.isbn}}'); return false;">Solicitar domicilio</button>
-    <button type="submit" class="btn btn-primary" onclick = "solicitar_sala('{{libro.isbn}}'); return false;">Solicitar Sala</button>
+    <button type="submit" class="btn btn-primary" onclick = "solicitar_domicilio('{{libro.isbn}}', '{{libro.id_libro}}'); return false;">Solicitar domicilio</button>
+    <button type="submit" class="btn btn-primary" onclick = "solicitar_sala('{{libro.isbn}}{{ libro.id_libro }} }}'); return false;">Solicitar Sala</button>
 </form>
 
 
