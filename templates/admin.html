@@ -17,9 +17,47 @@
     </div>
 
     <div class="historial">
-        <h1 class="h1-perfil"> Historial de operaciones  </h1>
+        <h1 class="h1-perfil"> Tramites   </h1>
+        {% if tramites | length > 0 %}
+        <table class="col-12 table table-hover table-responsive">
+            <thead>
+            <tr>
+                <th scope="col"> Usuario </th>
+                <th scope="col"> Id prestamo</th>
+                <th scope="col"> Titulo </th>
+                <th scope="col"> Autor </th>
+                <th scope="col"> Edicion </th>
+                <th scope="col"> Clasificacion </th>
+                <th scope="col"> Fecha </th>
+
+            </tr>
+            </thead>
+            <tbody id="libros">
+                {% for a in tramites %}
+                <tr data-id = "{{ a['id_libro']}}">
+
+                    <th> {{ a["usuario"] }}</th>
+                    <td class="clasificacion">{{ a["id_prestamo"] }}</td>
+                    <td>{{ a["titulo"] }}</td>
+                    <td>{{ a["autor"] }}</td>
+                    <td>{{ a["edicion"] }}</td>
+                    <td>{{ a["clasificacion"] }}</td>
+                    <td>{{ a["fecha_prestamo"] }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    {% else %}
+        <h2> No hay libros en tramite en este momento</h2>
+    {% endif %}
 
     </div>
 
 </div>
+
+<script src="./static/busqueda.js"> </script>
+    <script> let libros_tr = document.getElementById("libros");
+
+libros_tr.addEventListener("click", info_libro); </script>
 {% endblock %}
