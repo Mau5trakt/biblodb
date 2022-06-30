@@ -35,7 +35,7 @@
             </thead>
             <tbody id="libros">
                 {% for a in tramites %}
-                <tr data-id = "{{ a['id_libro']}}">
+                <tr data-id = "{{ a['id_prestamo']}}">
 
                     <th> {{ a["usuario"] }}</th>
                     <td class="clasificacion">{{ a["id_prestamo"] }}</td>
@@ -60,5 +60,5 @@
 <script src="./static/busqueda.js"> </script>
     <script> let libros_tr = document.getElementById("libros");
 
-libros_tr.addEventListener("click", info_libro); </script>
+libros_tr.addEventListener("click", aprobar); </script>
 {% endblock %}

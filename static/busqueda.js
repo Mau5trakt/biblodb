@@ -64,7 +64,7 @@ function aprobar(e){
 
 
         let http = new XMLHttpRequest();
-        let url = "/administrador";
+        let url = "/aprobar-prestamo";
 
         let datos = new FormData();
         datos.append("q", id);
@@ -138,7 +138,7 @@ function solicitar_domicilio(isbn, id_libro){
     datos.append("isbn", isbn)
     datos.append("id_libro", id_libro)
 
-    let url = "/solicitud_domicilio";
+    let url = "/solicitud_domicilio"; //Poner la ruta en python de prestar
 
     let http = new XMLHttpRequest();
     http.open("POST", url);
@@ -157,3 +157,51 @@ function solicitar_domicilio(isbn, id_libro){
     }
 }
 
+function aprobar_prestamo(id_prestamo){
+    console.log("Entras?")
+    let datos  =  new FormData();
+    datos.append("q", id_prestamo)
+
+    let url = "/prestamo-aprobado";
+
+    let http = new XMLHttpRequest();
+    http.open("POST", url);
+
+    http.send(datos)
+
+    http.onreadystatechange = function ()  {
+        if(this.readyState == 4){
+            if(this.status == 200){
+                Swal.fire(this.responseText)
+                location.reload()
+            }
+            else if(this.status != 500){
+                Swal.fire(this.responseText)
+            }
+        }
+    }
+}
+
+function denegar(id_prestamo){
+    console.log("Denegar")
+    let datos  =  new FormData();
+    datos.append("q", id_prestamo)
+
+    let url = "/denegar-prestamo";
+
+    let http = new XMLHttpRequest();
+    http.open("POST", url);
+
+    http.send(datos)
+
+    http.onreadystatechange = function ()  {
+        if(this.readyState == 4){
+            if(this.status == 200){
+                Swal.fire(this.responseText)
+            }
+            else if(this.status != 500){
+                Swal.fire(this.responseText)
+            }
+        }
+    }
+}

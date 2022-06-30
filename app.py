@@ -172,7 +172,7 @@ def usuariohome():
     for item in ver_press(carnet, 0):
         historial.append(item)
 
-    return render_template('ulogin.html', historial=historial)
+    return render_template('ulogin.html', historial=historial, libros_total=historial)
 
 
 
@@ -238,6 +238,42 @@ def admin():
     print("placeholder")
     aver = tramites()
     return render_template('admin.html', tramites=aver)
+
+
+
+
+@app.route('/aprobar-prestamo', methods=["POST"])
+def aprobando():
+    id_prestamos = request.form.get("q")
+    print(id_prestamos)
+    ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
+    return render_template('aprobando.html', libro=ver[0])
+
+@app.route('/prestamo-aprobado', methods=["POST"])
+def aprobar_prestamo():
+    print("--*-*-*-*-*-uy sou un separador-*-*-*-*-*-*-")
+    trabajador = session["id_trabajador"]
+    id_prestamos = request.form.get("q")
+    print(id_prestamos)
+
+    ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
+    print("---------")
+    print(ver)
+    id_libro = ver[0]["libro_id"]
+    db.execute("UPDATE prestamo SET status = 1 WHERE id_prestamo = ?", id_prestamos)
+    db.execute("UPDATE prestamo SET trabajador_id = ? WHERE id_prestamo = ?", trabajador, id_prestamos)
+    db.execute("UPDATE inventario SET estado = 1 WHERE libro_id = ?", id_libro)
+    return "Prestamo aprobado"
+
+@app.route('/denegar-prestamo', methods=["POST"])
+def denegar_prestamo():
+    trabajador = session["id_trabajador"]
+    id_prestamos = request.form.get("q")
+    print(id_prestamos)
+
+    ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
+    db.execute("UPDATE prestamo SET status = 5 WHERE id_prestamo = ?", id_prestamos)
+    return "Prestamo denegado"
 
 
 @app.route('/busqueda', methods=["GET", "POST"])
