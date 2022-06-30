@@ -1,7 +1,10 @@
 from cs50 import SQL
 from datetime import timedelta, datetime, date
+import re
 
 db = SQL("sqlite:///database/respaldo.db")
+
+pat_numerico = re.compile(r"(\d+)((\d+)+)?")
 
 class Libro():
 
@@ -205,6 +208,14 @@ def tramites():
 
 
     return entramite
+
+def confirmar_cantidad_insertar(cantidad):
+    if re.fullmatch(pat_numerico, cantidad):
+        qty = int(cantidad)
+        return qty
+    else:
+        return False
+
 
 def agregar_libros(cantidad, isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial):
     for a in range(cantidad):
