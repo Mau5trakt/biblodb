@@ -229,6 +229,52 @@ border-radius: 27px;
   justify-content:center;
 }
 
+.tarjeta{
+  background: rgba(217, 217, 217, 0.35);
+  mix-blend-mode: normal;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 27px;
+  width: 95%;
+}
+.h1tarjeta{
+  font-family: 'Lato';
+font-style: bold;
+font-weight: 800;
+font-size: 20px;
+line-height: 20px;
+text-align: center;
+
+color: #000000;
+}
+
+.textotarjeta{
+  font-family: 'Lato';
+font-style: normal;
+font-weight: 600;
+font-size: 15px;
+margin: 0 auto;
+text-align: center;
+}
+
+.imgtarjeta{
+  margin-top: 2%;
+}
+
+.circulito{
+  box-sizing: border-box;
+
+position: absolute;
+width: 20px;
+height: 20px;
+-moz-border-radius: 50%;
+-webkit-border-radius: 50%;
+border-radius: 50%;
+margin-top: 10px;
+
+background: #AEDE61;
+border: 1px solid #AEDE61;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
 
 .myButton {
     background-color:#ffffff;
