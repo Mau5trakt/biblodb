@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, admin_required
 from flask_mail import Mail, Message
-from functions import ver_press, unicarreras, buscar_libro, verificar_vencido, verificar_disponibles, verificar_enprestamo, verificar_nolotenga, fecha_prestamo
+from functions import *
 from datetime import timedelta, date
 
 app = Flask(__name__)
@@ -235,8 +235,8 @@ def perfil():
 @admin_required
 def admin():
     print("placeholder")
-
-    return render_template('admin.html')
+    aver = tramites()
+    return render_template('admin.html', tramites=aver)
 
 
 @app.route('/busqueda', methods=["GET", "POST"])
@@ -261,7 +261,7 @@ def libros_resultados():
 
     datos = []
 
-    libros = db.execute("SELECT * FROM libros where titulo like ? GROUP BY titulo", "%"+q+"%")
+    libros = db.execute("SELECT * FROM libros where titulo like ? OR AUTOR like ? or descriptor like ?  GROUP BY titulo", "%"+q+"%", "%"+q+"%", "%"+q+"%")
 
 
     for i in libros:
@@ -285,23 +285,21 @@ def libros_info():
 def solicitud_domicilio():
     carnet = session["carnet"]
     isbn = request.form.get("isbn")
+    id_libro = request.form.get("id_libro")
+    print(id_libro)
+    #print(request.form.get("id_libro"))
+    verificadores = [verificar_vencido(carnet),
+                     verificar_disponibles(isbn),
+                     verificar_enprestamo(carnet),
+                     verificar_nolotenga(carnet, isbn),
+                     verificar_entramite(carnet, isbn)
+                     ]
 
-    verificadores = []
-
-    ver1 = verificar_vencido(carnet)
-    verificadores.append(ver1)
-
-    ver2 = verificar_disponible(isbn)
-    verificadores.append(ver2)
-
-    ver3 = verificar_enprestamo(carnet)
-    verificadores.append(ver3)
-
-    ver4 = verificar_nolotenga(carnet, isbn)
-    verificadores.append(ver4)
+    print(verificadores)
 
     if False not in verificadores:
-        #db.execute("INSERT INTO prestamo ()) #me quedo en la parte del intert
+
+        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),2 )
         return "Prestamo solicitado",200
         #Haciendo el update
     else:
