@@ -234,6 +234,7 @@ def perfil():
 @app.route('/administrador', methods=["GET", "POST"])
 @admin_required
 def admin():
+
     print("placeholder")
     aver = tramites()
     return render_template('admin.html', tramites=aver)
@@ -306,3 +307,38 @@ def solicitud_domicilio():
         return "No se puede hacer el prestamo en este momento",400
 
 
+@app.route('/libros', methods=["POST", "GET"])
+@admin_required
+def administrar_libros():
+    if request.method == "POST":
+        if not request.form.get("cantidad"):
+            return apology("Ingrese la cantidad de libros")
+        if not request.form.get("titulo"):
+            return apology("Ingrese el titulo del libro")
+        if not request.form.get("autor"):
+            return apology("Introduzca el autor del libro")
+        if not request.form.get("clasificacion"):
+            return apology("Ingrese el titulo del libro")
+        if not request.form.get("confirmar"):
+            return apology("Confirme la cantidad de libros")
+
+        if request.form.get("cantidad") != request.form.get("confirmar"):
+            return apology("Confirme que la cantidad y la confirmacion sea la misma")
+        else:
+            qty = confirmar_numerico(request.form.get("cantidad"))
+
+        conf_edicion = confirmar_numerico(request.form.get("edicion"))
+        if conf_edicion is False:
+            return apology("Ingrese solo numeros")
+
+        agregar_libros(int(request.form.get("cantidad")),request.form.get("isbn"),request.form.get("titulo"),request.form.get("autor"),request.form.get("year"),request.form.get("clasificacion"),request.form.get("descriptor"),request.form.get("edicion"),request.form.get("imagen"),request.form.get("editorial"))
+        flash("Ingresado ")
+
+
+
+
+
+
+
+
+    return render_template('libros.html')

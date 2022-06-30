@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Libros
+{% endblock %}
+
+{% block links %}
+  <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/administrador">Inicio</a></li>
+  <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/logout">Cerrar Sesion</a></li>
+
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="main-container">
+        <div class="historial">
+
+            <h1 class="h1-perfil"> Insertar Libros</h1>
+
+            <form id="formulario" class="form" action="/libros" method="POST">
+
+            <input type="tel"  class="form-control" id="cantidad" name="cantidad" placeholder="Cantidad de libros" required>
+            <input type="text" class="form-control" id="isbn" name="isbn" placeholder="ISBN">
+            <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Titulo del libro"  required >
+            <input type="text" class="form-control" id="autor" name="autor" placeholder="Autor"  required >
+            <input type="text" class="form-control" id="year" name="year" placeholder="Año">
+            <input type="text" class="form-control" id="clasificacion" name="clasificacion" placeholder="Clasificacion" required>
+            <input type="text" class="form-control" id="descriptor" name="descriptor" placeholder="Descriptor">
+            <input type="text" class="form-control" id="edicion" name="edicion" placeholder="Edicion">
+            <input type="text" class="form-control" id="imagen" name="imagen" placeholder="Link de la imagen">
+            <input type="text" class="form-control" id="editorial" name="editorial" placeholder="Editorial">
+            <input type="tel"  class="form-control" id="confirmar" name="confirmar" placeholder="Confirmar cantidad a ingresar" required>
+            <input type="submit" id="condicion" class="fadeIn fourth" value="Añadir">
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+    <div class="segundo">
+            <h2> Aqui va lo de eliminar libro (tendria que ser por id)
+                    Corregir este div (creo que con ponerle el estilo como el del ghistorial se resuelve)</h2>
+        </div>
+{% endblock %}
