@@ -230,4 +230,11 @@ def contar_libros(isbn):
     else:
         return False
 
+def verificar_tramitesala(carnet, isbn): #Verificar que no tenga en tramite el mismo libro varias veces
+    cantidad = db.execute("SELECT COUNT(*) from prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where u_carnet = ? and status = 4 and isbn = ?",carnet,isbn)[0]["COUNT(*)"]
+    if cantidad == 0:
+        return True
+    else:
+        return False
+
 
