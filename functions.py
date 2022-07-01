@@ -45,7 +45,7 @@ class Libro():
 def ver_press(carnet, status):
     estudiante = db.execute("SELECT * FROM usuarios WHERE carnet = ?", carnet)[0]
 
-    prestamos_cerrados = db.execute("SELECT * FROM prestamo WHERE prestamo.u_carnet = ? AND status = ?", carnet, status)
+    prestamos_cerrados = db.execute("SELECT * FROM prestamo  WHERE prestamo.u_carnet = ? AND status = ?", carnet, status)
 
     encontrados = []
 
@@ -184,7 +184,7 @@ def fecha_prestamo():
 
 def tramites():
     entramite = []
-    consulta = db.execute("SELECT * FROM prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where status = 2")
+    consulta = db.execute("SELECT * FROM prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where status = 2 or status = 4")
     for libro in consulta:
 
         l = Libro(libro["id_libro"])
@@ -222,3 +222,19 @@ def agregar_libros(cantidad, isbn, titulo, autor, year, clasificacion, descripto
         db.execute("INSERT INTO libros (isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial) VALUES (?,?,?,?,?,?,?,?,?)", isbn,titulo,autor,year,clasificacion,descriptor, edicion,imagen, editorial)
         inventario_id = db.execute("SELECT COUNT(libros.id_libro) FROM libros")[0]["COUNT(libros.id_libro)"]
         db.execute("INSERT INTO inventario (libro_id, fecha_ingreso) VALUES (?,?)", inventario_id, date.today())
+
+def contar_libros(isbn):
+    cantidad = db.execute("SELECT COUNT(*) FROM libros INNER JOIN inventario on (libros.id_libro = inventario.libro_id) WHERE isbn = ? AND estado = 0", isbn)[0]["COUNT(*)"]
+    if cantidad != 0:
+        return True
+    else:
+        return False
+
+def verificar_tramitesala(carnet, isbn): #Verificar que no tenga en tramite el mismo libro varias veces
+    cantidad = db.execute("SELECT COUNT(*) from prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where u_carnet = ? and status = 4 and isbn = ?",carnet,isbn)[0]["COUNT(*)"]
+    if cantidad == 0:
+        return True
+    else:
+        return False
+
+

@@ -141,7 +141,6 @@ def inicio():
 
         #pasw = generate_password_hash(request.form.get("password"))
         if strcarnet[:4] == "9999":
-            print("jala")
             trabajador = db.execute("SELECT * FROM trabajadores WHERE id_trabajador = ?", carnet)
             session["id_trabajador"] = trabajador[0]["id_trabajador"]
             return redirect (url_for('admin'))
@@ -167,12 +166,15 @@ def inicio():
 @login_required
 def usuariohome():
     carnet = session["carnet"]
+    activos = db.execute("SELECT * FROM prestamo INNER JOIN libros on (prestamo.libro_id = libros.id_libro) where u_carnet = ? AND status = 1 OR status = 2 OR status= 6", carnet)
+
+
     historial = []
 
     for item in ver_press(carnet, 0):
         historial.append(item)
 
-    return render_template('ulogin.html', historial=historial, libros_total=historial)
+    return render_template('ulogin.html', historial=historial, activos=activos)
 
 
 
@@ -224,10 +226,6 @@ def perfil():
 
 
 
-
-
-        #print(carreras)
-
     return render_template('perfil.html', carnet=carnet, estudiante=estudiante, carreras=carreras)
 
 
@@ -235,7 +233,6 @@ def perfil():
 @admin_required
 def admin():
 
-    print("placeholder")
     aver = tramites()
     return render_template('admin.html', tramites=aver)
 
@@ -245,20 +242,15 @@ def admin():
 @app.route('/aprobar-prestamo', methods=["POST"])
 def aprobando():
     id_prestamos = request.form.get("q")
-    print(id_prestamos)
     ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
     return render_template('aprobando.html', libro=ver[0])
 
 @app.route('/prestamo-aprobado', methods=["POST"])
 def aprobar_prestamo():
-    print("--*-*-*-*-*-uy sou un separador-*-*-*-*-*-*-")
     trabajador = session["id_trabajador"]
     id_prestamos = request.form.get("q")
-    print(id_prestamos)
 
     ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
-    print("---------")
-    print(ver)
     id_libro = ver[0]["libro_id"]
     db.execute("UPDATE prestamo SET status = 1 WHERE id_prestamo = ?", id_prestamos)
     db.execute("UPDATE prestamo SET trabajador_id = ? WHERE id_prestamo = ?", trabajador, id_prestamos)
@@ -269,7 +261,6 @@ def aprobar_prestamo():
 def denegar_prestamo():
     trabajador = session["id_trabajador"]
     id_prestamos = request.form.get("q")
-    print(id_prestamos)
 
     ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
     db.execute("UPDATE prestamo SET status = 5 WHERE id_prestamo = ?", id_prestamos)
@@ -312,19 +303,35 @@ def libros_resultados():
 @app.route("/libros-info", methods = ["POST"])
 def libros_info():
     q = request.form.get("q")
-    print(q)
 
     libros = db.execute("SELECT * FROM libros WHERE id_libro = ?", q)
 
     return render_template("info-libro.html", libro=libros[0])
+
+@app.route("/solicitud-sala", methods = ["POST"])
+def solicitud_sala():
+    carnet = session["carnet"]
+    isbn = request.form.get("isbn")
+    id_libro = request.form.get("id_libro")
+    verificadores = [verificar_vencido(carnet),
+                     contar_libros(isbn),
+                     verificar_nolotenga(carnet, isbn),
+                     verificar_tramitesala(carnet, isbn)]
+
+    if False not in verificadores:
+
+        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),4 )
+        return "Prestamo solicitado",200
+        #Haciendo el update
+    else:
+        return "Prestamo Sala No se puede hacer el prestamo en este momento",400
+
 
 @app.route("/solicitud_domicilio", methods = ["POST"])
 def solicitud_domicilio():
     carnet = session["carnet"]
     isbn = request.form.get("isbn")
     id_libro = request.form.get("id_libro")
-    print(id_libro)
-    #print(request.form.get("id_libro"))
     verificadores = [verificar_vencido(carnet),
                      verificar_disponibles(isbn),
                      verificar_enprestamo(carnet),
@@ -332,11 +339,10 @@ def solicitud_domicilio():
                      verificar_entramite(carnet, isbn)
                      ]
 
-    print(verificadores)
 
     if False not in verificadores:
 
-        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),2 )
+        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, date.today(),4 )
         return "Prestamo solicitado",200
         #Haciendo el update
     else:
@@ -378,3 +384,17 @@ def administrar_libros():
 
 
     return render_template('libros.html')
+
+@app.route('/devolver_libro', methods=["GET"])
+def devolver():
+
+    print("Devolviendo")
+    id_libro  = request.args.get("libro")
+    db.execute("UPDATE prestamo SET status = 7 WHERE id_prestamo = ?", id_libro)
+    return redirect(url_for("usuariohome"))
+
+
+
+# Devolver o Renovar Hacer la ruta que reciba por get
+# Usando request.args.get("nombredelavariable") )(en renovar se llama libro)
+# con eso hacer toda la renovacion y returnar un redirect a la ruta principal "/"
