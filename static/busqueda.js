@@ -157,6 +157,34 @@ function solicitar_domicilio(isbn, id_libro){
     }
 }
 
+function solicitar_sala(isbn, id_libro){
+    console.log(isbn);
+    console.log(id_libro);
+    let datos  =  new FormData();
+    datos.append("isbn", isbn)
+    datos.append("id_libro", id_libro)
+
+    let url = "/solicitud-sala"; //Poner la ruta en python de prestar
+
+    let http = new XMLHttpRequest();
+    http.open("POST", url);
+
+    http.send(datos)
+
+    http.onreadystatechange = function ()  {
+        if(this.readyState == 4){
+            if(this.status == 200){
+                Swal.fire(this.responseText)
+            }
+            else if(this.status != 500){
+                Swal.fire(this.responseText)
+            }
+        }
+    }
+}
+
+
+
 function aprobar_prestamo(id_prestamo){
     console.log("Entras?")
     let datos  =  new FormData();
