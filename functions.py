@@ -45,7 +45,7 @@ class Libro():
 def ver_press(carnet, status):
     estudiante = db.execute("SELECT * FROM usuarios WHERE carnet = ?", carnet)[0]
 
-    prestamos_cerrados = db.execute("SELECT * FROM prestamo WHERE prestamo.u_carnet = ? AND status = ?", carnet, status)
+    prestamos_cerrados = db.execute("SELECT * FROM prestamo  WHERE prestamo.u_carnet = ? AND status = ?", carnet, status)
 
     encontrados = []
 
@@ -184,7 +184,7 @@ def fecha_prestamo():
 
 def tramites():
     entramite = []
-    consulta = db.execute("SELECT * FROM prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where status = 2")
+    consulta = db.execute("SELECT * FROM prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where status = 2 or status = 4")
     for libro in consulta:
 
         l = Libro(libro["id_libro"])
