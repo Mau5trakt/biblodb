@@ -250,12 +250,38 @@ def aprobar_prestamo():
     trabajador = session["id_trabajador"]
     id_prestamos = request.form.get("q")
 
-    ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
+    ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) INNER JOIN usuarios on (prestamo.u_carnet = usuarios.carnet) where prestamo.id_prestamo = ?", id_prestamos)
+
+    nombres = ver[0]["nombres"]
+    apellidos = ver[0]["apellidos"]
+    email = ver[0]["email"]
+    titulo = ver[0]["titulo"]
+    imagen = ver[0]["imagen"]
+    devolucion = ver[0]["fecha_devolucion"]
+
     id_libro = ver[0]["libro_id"]
     db.execute("UPDATE prestamo SET status = 1 WHERE id_prestamo = ?", id_prestamos)
     db.execute("UPDATE prestamo SET trabajador_id = ? WHERE id_prestamo = ?", trabajador, id_prestamos)
     db.execute("UPDATE inventario SET estado = 1 WHERE libro_id = ?", id_libro)
-    return "Prestamo aprobado"
+
+    try:
+        msg = Message("Prestamo Aprobado Correctamente", recipients=[correo])
+        msg.html = f"""
+                    <h1> Hola {nombres} {apellidos} </h1>
+                    <p> Tu prestamo de {Titulo} fue aprobado
+                        <img src="{imagen}" ><br>
+                        La fecha de devolucion es <b>{devolucion}</b> <br>
+                        Recuerda que entregar con demora un libro sin justificacion valida incurre en una mora de 3 Córdobas por día.
+                        Evite moras entregando a tiempo los libros que solicita
+                        </p>
+                        <p>Mensaje generado automaticamente el: {datetime.now()} </p>
+                    """
+        mail = Mail(current_app)
+        mail.send(msg)
+        return "Prestamo aprobado y correo enviado"
+
+    except:
+        return "Prestamo aprobado"
 
 @app.route('/denegar-prestamo', methods=["POST"])
 def denegar_prestamo():
