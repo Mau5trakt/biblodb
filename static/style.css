@@ -219,7 +219,7 @@ h2{
 position: absolute;
 width: 95%;
 padding: 2%;
-background: rgba(217, 217, 217, 0.35);
+background: rgba(217, 217, 217, 0.55);
 border-radius: 27px;
 }
 
@@ -230,11 +230,11 @@ border-radius: 27px;
 }
 
 .tarjeta{
-  background: rgba(217, 217, 217, 0.35);
+  background: rgba(217, 217, 217, 0.55);
   mix-blend-mode: normal;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 27px;
-  width: 95%;
+  /*width: 95%;*/
 }
 .h1tarjeta{
   font-family: 'Lato';
@@ -263,7 +263,7 @@ text-align: center;
 .circulito{
   box-sizing: border-box;
 
-position: absolute;
+
 width: 20px;
 height: 20px;
 -moz-border-radius: 50%;
