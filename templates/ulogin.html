@@ -15,21 +15,19 @@
 
 {% block contenido %}
 
-<div class ="main-container">
+<div class ="main-container" style ="overflow-x:hidden;">
 
 
-    <div class="row">
+    <div class="row justify-content-md-around justify-content-sm-center">
         {% for libro in activos %}
 
-            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-                {{loop.index}}
-                <div >
+            <!-- <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3"> -->
+                <div class="col-md-4 col-sm-10">
                     <div class="tarjeta">
                         <div class="row g-0">
                           <div class="col-5 col-sm-4">
                             <img src="{{libro.imagen}}" class="img-fluid w-100" alt="card-horizontal-image">
-                            <div class="circulito">
-                            </div>
+
 
                           </div>
                           <div class="col-7 col-sm-8">
@@ -41,6 +39,17 @@
                               <p class="textotarjeta">Año: {{libro.year}}</p>
                               <p class="textotarjeta">Clasificacion: {{libro.clasificacion}}</p>
                               <p class="textotarjeta">Tema: {{libro.descriptor}}</p>
+                              <div>
+
+                                <div class="circulito">
+
+                                </div>
+                                <p> Fecha Devolucion: {{libro.fecha_devolucion}}<br>
+                                    Dias Restantes:  </p>
+                                <a href="/renovar_libro?libro={{libro.id_prestamo}}">Renovar </a>
+                                <a href="/devolver_libro?libro={{libro.id_prestamo}}">Devolver </a>
+                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -48,14 +57,14 @@
 
                       <form >
                 </div>
-            </div>
+            <!-- </div> -->
 
         {% endfor %}
     </div>
 
 </div>
     <div class ="main-container">
-    <div class="historial">
+    <div class="historial" style = "overflow-x:auto;">
         <h1 class="h1-perfil">Historial de prestamo</h1>
 
         {% if historial | length > 0  %}
