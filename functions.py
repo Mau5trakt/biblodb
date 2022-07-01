@@ -222,3 +222,12 @@ def agregar_libros(cantidad, isbn, titulo, autor, year, clasificacion, descripto
         db.execute("INSERT INTO libros (isbn, titulo, autor, year, clasificacion, descriptor, edicion, imagen, editorial) VALUES (?,?,?,?,?,?,?,?,?)", isbn,titulo,autor,year,clasificacion,descriptor, edicion,imagen, editorial)
         inventario_id = db.execute("SELECT COUNT(libros.id_libro) FROM libros")[0]["COUNT(libros.id_libro)"]
         db.execute("INSERT INTO inventario (libro_id, fecha_ingreso) VALUES (?,?)", inventario_id, date.today())
+
+def contar_libros(isbn):
+    cantidad = db.execute("SELECT COUNT(*) FROM libros INNER JOIN inventario on (libros.id_libro = inventario.libro_id) WHERE isbn = ? AND estado = 0", isbn)[0]["COUNT(*)"]
+    if cantidad != 0:
+        return True
+    else:
+        return False
+
+
