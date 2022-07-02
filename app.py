@@ -265,23 +265,23 @@ def aprobar_prestamo():
     db.execute("UPDATE inventario SET estado = 1 WHERE libro_id = ?", id_libro)
 
     try:
-        msg = Message("Prestamo Aprobado Correctamente", recipients=[correo])
+        msg = Message("Prestamo Aprobado Correctamente", recipients=[email])
         msg.html = f"""
-                    <h1> Hola {nombres} {apellidos} </h1>
-                    <p> Tu prestamo de {Titulo} fue aprobado
-                        <img src="{imagen}" ><br>
-                        La fecha de devolucion es <b>{devolucion}</b> <br>
-                        Recuerda que entregar con demora un libro sin justificacion valida incurre en una mora de 3 Córdobas por día.
-                        Evite moras entregando a tiempo los libros que solicita
-                        </p>
-                        <p>Mensaje generado automaticamente el: {datetime.now()} </p>
-                    """
+                        <h1> Hola {nombres} {apellidos} </h1>
+                        <p> Tu prestamo de {titulo} fue aprobado
+                            <img src="{imagen}" ><br>
+                            La fecha de devolucion es <b>{devolucion}</b> <br>
+                            Recuerda que entregar con demora un libro sin justificacion valida incurre en una mora de 3 Córdobas por día.
+                            Evite moras entregando a tiempo los libros que solicita
+                            </p>
+                            <p>Mensaje generado automaticamente el: {datetime.now()} </p>
+                        """
         mail = Mail(current_app)
         mail.send(msg)
         return "Prestamo aprobado y correo enviado"
-
     except:
         return "Prestamo aprobado"
+
 
 @app.route('/denegar-prestamo', methods=["POST"])
 def denegar_prestamo():
@@ -368,7 +368,7 @@ def solicitud_domicilio():
 
     if False not in verificadores:
 
-        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, date.today(),4 )
+        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),4 )
         return "Prestamo solicitado",200
         #Haciendo el update
     else:
