@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Devolucion
+{% endblock %}
+
+{% block links %}
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/administrador">Inicio</a></li>
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/libros">Administrar Libros</a></li>
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/logout">Cerrar Sesion</a></li>
+{% endblock %}
+
+{% block contenido %}
+
+
+
+
+
+<div class="main-container">
+
+    <div class="books-container">
+
+    </div>
+
+    <div class="historial">
+        <h1 class="h1-perfil"> Devoluciones </h1>
+        {% if devoluciones | length > 0 %}
+        <table class="col-12 table table-hover table-responsive">
+            <thead>
+            <tr>
+                <th scope="col"> Usuario </th>
+                <th scope="col"> Id prestamo</th>
+                <th scope="col"> Titulo </th>
+                <th scope="col"> Autor </th>
+                <th scope="col"> Edicion </th>
+                <th scope="col"> Clasificacion </th>
+
+            </tr>
+            </thead>
+            <tbody id="libros">
+                {% for a in devoluciones %}
+                <tr data-id = "{{ a['id_prestamo']}}">
+
+                    <th> {{ a["u_carnet"] }}</th>
+                    <td class="clasificacion">{{ a["id_prestamo"] }}</td>
+                    <td>{{ a["titulo"] }}</td>
+                    <td>{{ a["autor"] }}</td>
+                    <td>{{ a["edicion"] }}</td>
+                    <td>{{ a["clasificacion"] }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    {% else %}
+        <h2> No hay libros en tramite en este momento</h2>
+    {% endif %}
+
+    </div>
+
+
+
+<script src="./static/busqueda.js"> </script>
+    <script> let libros_tr = document.getElementById("libros");
+
+libros_tr.addEventListener("click", devolver); </script>
+{% endblock %}
