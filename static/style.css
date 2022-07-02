@@ -213,6 +213,19 @@ h2{
 
 }
 
+.textocentrado{
+  text-align: center;
+}
+
+.links{
+  font-family: 'Lato';
+font-style: normal;
+font-weight: 600;
+font-size: 15px;
+margin: 8px;
+text-align: center;
+color: #0023ff;
+}
 
 .historial{
 
@@ -221,6 +234,7 @@ width: 95%;
 padding: 2%;
 background: rgba(217, 217, 217, 0.55);
 border-radius: 27px;
+overflow-x:auto;
 }
 
 .main-container{
