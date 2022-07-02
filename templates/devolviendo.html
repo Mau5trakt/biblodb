@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="row g-0">
+      <div class="col-5 col-sm-4">
+        <img src="{{libro.imagen}}" class="img-fluid w-100" alt="card-horizontal-image">
+      </div>
+      <div class="col-7 col-sm-8">
+        <div class="card-body">
+          <h5 class="card-title">{{libro.titulo}}</h5>
+            <p class="card-text">Id: {{libro.id_libro}}</p>
+          <p class="card-text">Autor: {{libro.autor}}</p>
+          <p class="card-text">Edicion: {{libro.edicion}}.a</p>
+          <p class="card-text">Año: {{libro.year}}</p>
+
+
+          <p class="card-text">Clasificacion: {{libro.clasificacion}}</p>
+          <p class="card-text">Descriptor: {{libro.descriptor}}</p>
+            <p class="card-text"><b>Vencimiento: {{libro.fecha_devolucion}}</b></p>
+            <label for="quantity">Deuda del usuario:</label>
+          <input type="number" id="quantity" name="quantity" min="0" value="0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form >
+
+    <button type="submit" class="btn btn-primary" onclick = "devolver_prestamo('{{libro.id_prestamo}}'); return false;">Devolver</button>
+</form>
