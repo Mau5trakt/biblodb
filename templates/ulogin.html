@@ -44,10 +44,9 @@
                                 <div class="circulito">
 
                                 </div>
-                                <p> Fecha Devolucion: {{libro.fecha_devolucion}}<br>
-                                    Dias Restantes:  </p>
-                                <a href="/renovar_libro?libro={{libro.id_prestamo}}">Renovar </a>
-                                <a href="/devolver_libro?libro={{libro.id_prestamo}}">Devolver </a>
+                                <p> Fecha Devolucion: <b>{{libro.fecha_devolucion}}</b><br>
+                                <a class="links" href="/renovar_libro?libro={{libro.id_prestamo}}">Renovar </a>
+                                <a class="links" href="/devolver_libro?libro={{libro.id_prestamo}}">Devolver </a>
                               </div>
 
                             </div>
@@ -64,7 +63,7 @@
 
 </div>
     <div class ="main-container">
-    <div class="historial" style = "overflow-x:auto;">
+    <div class="historial">
         <h1 class="h1-perfil">Historial de prestamo</h1>
 
         {% if historial | length > 0  %}
