@@ -156,7 +156,7 @@ def verificar_vencido(carnet):
 
 def verificar_enprestamo(carnet):
     cantidad = db.execute("SELECT COUNT(*) from prestamo WHERE prestamo.u_carnet = ? AND status = 1 or status = 2", carnet)[0]["COUNT(*)"]
-    if cantidad < 2 :
+    if cantidad < 3 :
         return True
     else:
         return False
