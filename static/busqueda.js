@@ -78,7 +78,46 @@ function aprobar(e){
                     let datos = http.responseText;
 
                     swal.fire({
-                        "title": "Llega",
+                        "title": "Informacion de Libro",
+                        "html": datos,
+                        "showConfirmButton:": false,
+                    });
+                }
+            }
+        }
+
+
+
+
+
+    }
+}
+
+
+function devolver(e){
+    console.log(e.target);
+    if(e.target.nodeName == "TD"){
+        let linea = e.target.parentNode;
+        let id = linea.dataset.id;
+
+
+        let http = new XMLHttpRequest();
+        let url = "/devolver-prestamo";
+
+        let datos = new FormData();
+        datos.append("q", id);
+        datos.append("deuda", document.getElementById("quantity"))
+
+        http.open("POST", url);
+        http.send(datos);
+
+        http.onreadystatechange = function(){
+            if(http.readyState == 4){
+                if(http.status == 200){
+                    let datos = http.responseText;
+
+                    swal.fire({
+                        "title": "Informacion Del Libro",
                         "html": datos,
                         "showConfirmButton:": false,
                     });
@@ -209,6 +248,32 @@ function aprobar_prestamo(id_prestamo){
         }
     }
 }
+
+function devolver_prestamo(id_prestamo){
+    let datos  =  new FormData();
+    datos.append("q", id_prestamo)
+    //datos.append("deuda", document.getElementById("quantity"))
+
+    let url = "/prestamo-devuelto";
+
+    let http = new XMLHttpRequest();
+    http.open("POST", url);
+
+    http.send(datos)
+
+    http.onreadystatechange = function ()  {
+        if(this.readyState == 4){
+            if(this.status == 200){
+                Swal.fire(this.responseText)
+                location.reload()
+            }
+            else if(this.status != 500){
+                Swal.fire(this.responseText)
+            }
+        }
+    }
+}
+
 
 function denegar(id_prestamo){
     console.log("Denegar")
