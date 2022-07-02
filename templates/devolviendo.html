@@ -14,6 +14,9 @@
 
           <p class="card-text">Clasificacion: {{libro.clasificacion}}</p>
           <p class="card-text">Descriptor: {{libro.descriptor}}</p>
+            <p class="card-text"><b>Vencimiento: {{libro.fecha_devolucion}}</b></p>
+            <label for="quantity">Deuda del usuario:</label>
+          <input type="number" id="quantity" name="quantity" min="0" value="0">
         </div>
       </div>
     </div>
@@ -21,6 +24,5 @@
 
   <form >
 
-    <button type="submit" class="btn btn-primary" onclick = "aprobar_prestamo('{{libro.id_prestamo}}'); return false;">Aprobar</button>
-    <button type="submit" class="btn btn-primary" onclick = "denegar('{{libro.id_prestamo}}'); return false;">Cancelar</button>
+    <button type="submit" class="btn btn-primary" onclick = "devolver_prestamo('{{libro.id_prestamo}}'); return false;">Devolver</button>
 </form>

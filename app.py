@@ -228,6 +228,14 @@ def perfil():
 
     return render_template('perfil.html', carnet=carnet, estudiante=estudiante, carreras=carreras)
 
+@app.route('/devolucion', methods=["GET", "POST"])
+@admin_required
+def devolviendo_libro():
+    devoluciones = db.execute("SELECT * FROM prestamo INNER JOIN libros l on l.id_libro = prestamo.libro_id where status = 7")
+
+
+    return render_template('devolucion.html', devoluciones=devoluciones)
+
 
 @app.route('/administrador', methods=["GET", "POST"])
 @admin_required
@@ -244,6 +252,15 @@ def aprobando():
     id_prestamos = request.form.get("q")
     ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
     return render_template('aprobando.html', libro=ver[0])
+
+
+@app.route('/devolver-prestamo', methods=["POST"])
+def mandaradevolver():
+    id_prestamos = request.form.get("q")
+    ver = db.execute("SELECT * from prestamo inner join libros on (prestamo.libro_id = libros.id_libro) where prestamo.id_prestamo = ?", id_prestamos)
+    return render_template('devolviendo.html', libro=ver[0])
+
+
 
 @app.route('/prestamo-aprobado', methods=["POST"])
 def aprobar_prestamo():
@@ -281,6 +298,20 @@ def aprobar_prestamo():
         return "Prestamo aprobado y correo enviado"
     except:
         return "Prestamo aprobado"
+
+
+@app.route('/prestamo-devuelto', methods=["POST"])
+def ahorasidevuelvo():
+    trabajador = session["id_trabajador"]
+    id_prestamos = request.form.get("q")
+    datos = db.execute("SELECT libro_id, u_carnet  from prestamo where id_prestamo = ?",id_prestamos)[0]
+    id_libro = datos["libro_id"]
+    carnet = datos["u_carnet"]
+    #deuda = request.form.get("deuda")
+    db.execute("UPDATE prestamo SET status = 0 WHERE id_prestamo = ?", id_prestamos)
+    db.execute("UPDATE inventario SET estado = 0 WHERE libro_id = ?", id_libro)
+    db.execute("INSERT INTO devolucion (fecha_devuelto,prestamo_id,carnet,mora) VALUES (?,?,?,?)", date.today(), id_prestamos,carnet,0)
+    return "Prestamo devuelto "
 
 
 @app.route('/denegar-prestamo', methods=["POST"])
@@ -334,7 +365,7 @@ def libros_info():
 
     return render_template("info-libro.html", libro=libros[0])
 
-@app.route("/solicitud-sala", methods = ["POST"])
+@app.route("/solicitud-sala", methods = ["GET","POST"])
 def solicitud_sala():
     carnet = session["carnet"]
     isbn = request.form.get("isbn")
@@ -344,9 +375,10 @@ def solicitud_sala():
                      verificar_nolotenga(carnet, isbn),
                      verificar_tramitesala(carnet, isbn)]
 
+
     if False not in verificadores:
 
-        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),4 )
+        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, date.today(),4 )
         return "Prestamo solicitado",200
         #Haciendo el update
     else:
@@ -368,7 +400,7 @@ def solicitud_domicilio():
 
     if False not in verificadores:
 
-        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),4 )
+        db.execute("INSERT INTO prestamo (fecha_prestamo, libro_id, u_carnet, fecha_devolucion, status) VALUES (?,?,?,?,?)",date.today(), id_libro, carnet, fecha_prestamo(),2 )
         return "Prestamo solicitado",200
         #Haciendo el update
     else:
@@ -414,10 +446,18 @@ def administrar_libros():
 @app.route('/devolver_libro', methods=["GET"])
 def devolver():
 
-    print("Devolviendo")
     id_libro  = request.args.get("libro")
     db.execute("UPDATE prestamo SET status = 7 WHERE id_prestamo = ?", id_libro)
     return redirect(url_for("usuariohome"))
+
+@app.route('/renovar_libro', methods=["GET"])
+def renovacion():
+
+    #id_libro = request.args.get("libro")
+    return redirect(url_for("usuariohome"))
+    #obtener la fecha que se entega el libro
+    #agregarle 7 dias mas
+    #hacer el update
 
 
 

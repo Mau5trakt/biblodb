@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Admin
+    Devolucion
 {% endblock %}
 
 {% block links %}
-    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/devolucion">Devolucion</a></li>
+    <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/administrador">Inicio</a></li>
     <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/libros">Administrar Libros</a></li>
     <li class="nav-item d-flex align-items-center"><a class="nav-item nav-links" href="/logout">Cerrar Sesion</a></li>
 {% endblock %}
@@ -23,8 +23,8 @@
     </div>
 
     <div class="historial">
-        <h1 class="h1-perfil"> Tramites   </h1>
-        {% if tramites | length > 0 %}
+        <h1 class="h1-perfil"> Devoluciones </h1>
+        {% if devoluciones | length > 0 %}
         <table class="col-12 table table-hover table-responsive">
             <thead>
             <tr>
@@ -38,10 +38,10 @@
             </tr>
             </thead>
             <tbody id="libros">
-                {% for a in tramites %}
+                {% for a in devoluciones %}
                 <tr data-id = "{{ a['id_prestamo']}}">
 
-                    <th> {{ a["usuario"] }}</th>
+                    <th> {{ a["u_carnet"] }}</th>
                     <td class="clasificacion">{{ a["id_prestamo"] }}</td>
                     <td>{{ a["titulo"] }}</td>
                     <td>{{ a["autor"] }}</td>
@@ -63,5 +63,5 @@
 <script src="./static/busqueda.js"> </script>
     <script> let libros_tr = document.getElementById("libros");
 
-libros_tr.addEventListener("click", aprobar); </script>
+libros_tr.addEventListener("click", devolver); </script>
 {% endblock %}
